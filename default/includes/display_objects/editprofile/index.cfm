@@ -265,7 +265,9 @@
 														</div>
 													</div>
 													<div class="#this.editProfileExtAttributeDownloadClass#">
-														<span class="#this.editProfileHelpBlockClass#"><a class="#this.editProfileExtAttributeDownloadButtonClass#" href="#variables.$.globalConfig('context')#/tasks/render/file/index.cfm?fileID=#attributeValue#" target="_blank">Download</a></span>
+														<span class="#this.editProfileHelpBlockClass#">
+														<!--- Changes the download context to the correct address and showes the small image --->
+														<a class="#this.editProfileExtAttributeDownloadButtonClass#" href="#variables.$.globalConfig('context')#/index.cfm/_api/render/file/?fileID=#attributeValue#" target="_blank"><img id="assocImage" src="#variables.$.globalConfig('context')#/index.cfm/_api/render/small/?fileid=#attributeValue#&amp;cacheID=#createUUID()#" /></a></span>
 													</div>
 												</div>
 											</cfif>
