@@ -46,7 +46,7 @@
 	version 2 without this exception.  You may, if you choose, apply this exception to your own modified versions of Mura CMS.
 --->
 
-<cfsilent>
+<cfsilent><!--- Set a Static challenge ---> <cfset exa = 0>
 <cfset request.layout=false>
 <cfset returnsets=structNew()>
 <cfif isDefined("session.mura.editBean") and isInstanceOf(session.mura.editBean, "mura.user.userBean") and session.mura.editBean.getUserID() eq rc.baseID>
@@ -91,7 +91,7 @@
 				<cfif attributeBean.getType() eq "File" and len(attributeValue) and attributeValue neq 'useMuraDefault'> 
 					<cfif listFindNoCase("png,jpg,jpeg",application.serviceFactory.getBean("fileManager").readMeta(attributeValue).fileExt)>
 						<a href="./index.cfm?muraAction=cArch.imagedetails&amp;userid=#userBean.getUserID()#&amp;siteid=#userBean.getSiteID()#&amp;fileid=#attributeValue#"><img id="assocImage" src="#application.configBean.getContext()#//index.cfm/_api/render/small/?fileid=#attributeValue#&amp;cacheID=#createUUID()#" /></a>
-					</cfif>
+					<!--- if image available ---><cfset exa = 1></cfif>
 					<a href="#application.configBean.getContext()#/index.cfm/_api/render/file/?fileID=#attributeValue#" target="_blank">[#rbKey('user.download')#]</a> <input type="checkbox" value="true" name="extDelete#attributeBean.getAttributeID()#"/> #rbKey('user.delete')#
 				</cfif>
 			</label>
@@ -99,8 +99,14 @@
 			<cfif attributeBean.getType() IS "Hidden">
 				<cfset attributeBean.setType( "TextBox" ) />
 			</cfif>	
+				<!--- This make a file that is required not require if image is already on file --->
+				<cfif exa eq 0>
 				#attributeBean.renderAttribute(attributeValue)#
+                		<cfelse>
+				#replace(attributeBean.renderAttribute(attributeValue),'true','false')#
+                		</cfif>
 		</div>
+		<!--- Set a Static challenge ---> <cfset exa = 0>
 	</cfloop>
 	</span>
 </cfloop>
@@ -142,6 +148,7 @@
 				<cfif attributeBean.getType() eq "File" and len(attributeValue) and attributeValue neq 'useMuraDefault'> 
 					<cfif listFindNoCase("png,jpg,jpeg",application.serviceFactory.getBean("fileManager").readMeta(attributeValue).fileExt)>
 						<a href="./index.cfm?muraAction=cArch.imagedetails&amp;userid=#userBean.getUserID()#&amp;siteid=#userBean.getSiteID()#&amp;fileid=#attributeValue#"><img id="assocImage" src="#application.configBean.getContext()#/index.cfm/_api/render/small/?fileid=#attributeValue#&amp;cacheID=#createUUID()#" /></a>
+					<!--- if image available ---><cfset exa = 1>
 					</cfif>
 					<a href="#application.configBean.getContext()#/index.cfm/_api/render/file/?fileID=#attributeValue#" target="_blank">[#rbKey('user.download')#]</a> <input type="checkbox" value="true" name="extDelete#attributeBean.getAttributeID()#"/> #rbKey('user.delete')#
 				</cfif>
@@ -150,8 +157,14 @@
 			<cfif attributeBean.getType() IS "Hidden">
 				<cfset attributeBean.setType( "TextBox" ) />
 			</cfif>	
+				<!--- This make a file that is required not require if image is already on file --->
+				<cfif exa eq 0>
 				#attributeBean.renderAttribute(attributeValue)#
+                		<cfelse>
+                		#replace(attributeBean.renderAttribute(attributeValue),'true','false')#
+                		</cfif>
 		</div>
+		<!--- Set a Static challenge ---> <cfset exa = 0> 
 	</cfloop>
 	</span>
 </cfloop>
